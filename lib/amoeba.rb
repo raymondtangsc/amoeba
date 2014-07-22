@@ -374,7 +374,11 @@ module Amoeba
           # table from copying so we don't end up with the new
           # and old children on the copy
           if r.macro == :has_many && r.is_a?(ActiveRecord::Reflection::ThroughReflection)
-            amoeba_conf.exclude_field r.options[:through]
+            if amoeba_conf.includes.count > 0
+              amoeba_conf.includes.delete(r.options[:through]) 
+            elsif amoeba_conf.excludes.count > 0
+              andmoeba_conf.exclude_field r.options[:through]
+            end
           end
         end
         # }}}
